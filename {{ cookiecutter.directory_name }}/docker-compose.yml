@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  {{cookiecutter.database_container_name}}:
+    image: timescale/timescaledb-ha:pg14-latest
+    container_name: {{cookiecutter.database_container_name}}
+    volumes:
+      - "{{cookiecutter.database_container_name}}:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_HOST: {{cookiecutter.database_container_name}}
+      POSTGRES_USER: {{cookiecutter.database_container_name}}
+      POSTGRES_PASSWORD: {{cookiecutter.database_container_name}}
+      POSTGRES_DB: {{cookiecutter.database_container_name}}
+    # command: [ "postgres", "-c", "log_statement=all", "-c", "log_min_messages=info", "-c", "auto_explain.log_nested_statements=on" ]
+
+
+  {{cookiecutter.api_container_name}}:
+    container_name: {{cookiecutter.api_container_name}}
+    depends_on:
+      - {{cookiecutter.database_container_name}}
+    ports:
+      - "8888:80"
+      - "5678:5678"
+    volumes:
+      - .:/app
+    environment:
+      ENV: development
+      # DEBUGGER: true
+    build:
+      context: .
+      args:
+        INSTALL_DEV: 1
+
+
+volumes:
+  {{cookiecutter.database_container_name}}:
+  redis:
+
+networks:
+  default:
+    name: {{cookiecutter.database_container_name}}

@@ -1,0 +1,97 @@
+[tool.poetry]
+name = "{{cookiecutter.database_container_name}}"
+version = "0.0.0"
+description = ""
+authors = ["Admin <admin@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = {extras = ["dotenv"], version = "^1.10.8"}
+gunicorn = "^20.0.4"
+psycopg2-binary = "^2.8.5"
+alembic = "^1.4.2"
+SQLAlchemy = {extras = ["declarative", "asyncio"], version = "2.0.15"}
+uvicorn = "^0.22"
+pytz = "^2022.1"
+asyncpg = "^0.27.0"
+sqlalchemy2-stubs = "^0.0.2a34"
+fastapi = {extras = ["all"], version = "^0.96.0"}
+types-pytz = "^2023.3.0.0"
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.0.0"
+black = "^22.0"
+cfn-lint = "^0.68.1"
+debugpy = "^1.6.3"
+ipython = "^8.3.0"
+mypy = "^0.981"
+pre-commit = "^2.20.0"
+pylint = "^2.15.4"
+pytest = "^7.1.3"
+isort = {extras = ["pyproject"], version = "^5.11.4"}
+plotly = "^5.15.0"
+ipykernel = "^6.23.1"
+freezegun = "^1.2.2"
+watchdog = {extras = ["watchmedo"], version = "^3.0.0"}
+pytest-asyncio = "^0.21.0"
+
+[tool.isort]
+py_version = 311
+skip = [".gitignore", ".dockerignore"]
+extend_skip = [".md", ".json"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 88
+profile = "black"
+
+[tool.autoflake]
+check = false
+
+[tool.pylint.messages_control]
+max-line-length = 88
+max-args = 6
+extension-pkg-whitelist='pydantic'
+ignore-paths = '^migrations|^scripts'
+disable = [
+  "missing-docstring",
+  "missing-function-docstring",
+  "no-member",
+  "line-too-long",
+  "broad-except",
+  "too-few-public-methods",
+]
+
+[tool.pylint.design]
+# limiting the number of returns might discourage
+# the use of guard clauses. So we increase the
+# allowed number of returns from 6 to 8
+max-returns = 8
+
+[tool.mypy]
+python_version = "3.11"
+plugins = ["pydantic.mypy", "sqlmypy"]
+ignore_missing_imports = true
+disallow_untyped_defs = true
+follow_imports = "skip"
+# exclude = [
+#   '^(?!api).*',
+#   '^(?!core).*',
+#   '^(?!db).*',
+# ]
+
+[[tool.mypy.overrides]]
+module = [
+    'db',
+    'core',
+    'api'
+]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+

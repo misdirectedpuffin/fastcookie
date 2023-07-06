@@ -1,0 +1,10 @@
+{
+  "python_version": "3.11.0",
+  "first_module_name": "crap",
+  "database_container_name": "db",
+  "api_container_name": "api",
+  "superuser_email": "bob@jones.com",
+  "superuser_password": "abc123",
+  "directory_name": "crapdir",
+  "first_model_name": "Crap"
+}
